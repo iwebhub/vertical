@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MRI Driver Assistant</title>
+<div class="header-card">
+  <div>📅<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/:x:/r/sites/hs_ImagingServices/_layouts/15/Doc.aspx?sourcedoc=*7BBAD4498F-D708-4098-9A09-67E0E28BEF86*7D&amp;file=CUH*20MRI*20Schedule9.11.25.xlsx&amp;action=default&amp;mobileredirect=true__;JSUlJQ!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpnxQ78hXA$" target="_blank" style="color:#0078D4; font-weight:bold; text-decoration:underline;">
+       CUH MRI Schedule        
+    </a>
+    📋<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hs_ImagingServices/SitePages/MRI*20Landing.aspx__;JQ!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpl_DZ3NNQ$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+          MRI Protocol
+        </a>
+  📞 <strong>👨‍⚕️<span style="font-size:13px;">ED Charge:</strong> 38218 <strong>🚨<span style="font-size:13px;">ED Pivot :</strong>31484 <span style="font-size:12px;">(supertrack area, waiting room or subwaiting room)</span>  <span style="color:#F58220; font-weight:bold;">   🚁 <span style="font-size:13px;">CareFlite:  </span> (800) 442-6260
+</div>
+
+</div>
+
+<style>
+body { font-family: Arial, sans-serif; padding: 5px; }
+
+
+/* ===== GRID (Top 4 columns blue button - ORIGINAL) ===== */
+.grid {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+/* ===== GRID small button -hidden buttons ===== */
+.gridsmallbutton {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 8px;
+}
+
+.block button {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  background-color: #0078D4;
+  color: white;
+  font-size: 11px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.block button:hover { background-color: #005A9E; }
+
+.blockyellow button {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  background-color: #CCD1D1;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.blockyellow button:hover { background-color: #005A9E; }
+
+textarea.hidden {
+  position: absolute;
+  left: -9999px;
+}
+
+.smallblock button {
+  width: 100%;
+  padding: 1px;
+  border: none;
+  background-color: #A6BEA2;
+  color: #f5f7fa;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.smallblock button:hover { background-color: #d0d3d4; }
+
+
+
+.builder {
+  margin-top: -20px;
+  padding: 20px;
+  background: #f5f7fa; /* ===== gray MRI transport == */
+
+  border-radius: 6px;
+}
+
+.builder h2 { margin-bottom: 10px; }
+
+.buttons {
+  
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+}
+.hidbtn {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+}
+
+.hidbtn button {
+  background: #f5f7fa;
+  color: #f5f7fa;
+  border:none;
+
+
+}
+
+
+.buttons button {
+  background: #e0e0e0;
+  color: black;
+  border-radius: 6px;
+}
+
+
+.buttons button.active {
+  background: #4CAF50;
+  color: white;
+}
+
+.output {
+  width: 100%;
+  height: 100px;
+  margin-top: -15px;
+
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.copy-btn {
+  flex: 1;
+  height: 45px;
+  font-size: 14px;
+  font-weight: bold;
+  background: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+.copy-btn:hover { background-color: #005A9E; }
+
+.clear-btn {
+  flex: 1;
+  height: 45px;
+  font-size: 14px;
+  font-weight: bold;
+  background: #f39c12;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+.clear-btn:hover { background-color: #d68910; }
+
+.bottombuttons {
+  flex: 1;
+  height: 45px;
+  font-size: 14px;
+  margin-top: 100px;
+  background: #229954;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+.bottombuttons:hover { background-color: #196f3d; }
+
+/* Toast-----------Toast-----Toast-----Toast-----Toast------ */
+#toast {
+  visibility: hidden;
+  min-width: 160px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 10px;
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: 0.3s;
+}
+
+#toast.show {
+  visibility: visible;
+  opacity: 1;
+  bottom: 50px;
+}
+/* ---------------ContrastPopup----------------- */
+#contrastPopup button {
+  padding: 15px;
+
+  border: none;
+  border-radius: 6px;
+  background: #e0e0e0;
+  cursor: pointer;
+background:linear-gradient(180deg,#d5f5e3 0%,#eafaf1 55%,#abebc6 100%);
+}
+#contrastPopup button:hover {
+  background: #82e0aa;
+}
+
+
+/* ---------------CIEDPopup----------------- */
+#CIEDPopup button {
+  padding: 15px;
+
+  border: none;
+  border-radius: 6px;
+  background: #e0e0e0;
+  cursor: pointer;
+background:linear-gradient(180deg,#d5f5e3 0%,#eafaf1 55%,#abebc6 100%);
+}
+#CIEDPopup button:hover {
+  background: #82e0aa;
+}
+
+/* ---------------DialysisPopup----------------- */
+#dialysisPopup button {
+  padding: 15px;
+
+  border: none;
+  border-radius: 6px;
+  background: #e0e0e0;
+  cursor: pointer;
+background:linear-gradient(180deg,#d5f5e3 0%,#eafaf1 55%,#abebc6 100%);
+}
+#dialysisPopup button:hover {
+  background: #82e0aa;
+}
+
+/* ---------------PumpPopup----------------- */
+#PumpPopup button {
+  padding: 15px;
+
+  border: none;
+  border-radius: 6px;
+  background: #d5f5e3;
+  cursor: pointer;
+background:linear-gradient(180deg,#d5f5e3 0%,#eafaf1 55%,#abebc6 100%);
+}
+#PumpPopup button:hover {
+  background: #82e0aa;
+}
+
+
+
+/* ===== LEFT VERTICAL NAVIGATION ===== */
+body {
+  margin: 0;
+  padding: 10px;
+}
+.app-layout {
+  display: block;
+}
+.sidebar {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  bottom: 10px;
+  width: 225px;
+  box-sizing: border-box;
+  padding: 12px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #f5f7fa;
+  border: 1px solid #d5dce3;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.10);
+  z-index: 100;
+}
+.sidebar-title {
+  margin: 2px 0 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #cbd5df;
+  color: #34495e;
+  font-size: 14px;
+  font-weight: bold;
+}
+.sidebar .grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2px;
+  margin-top: 0;
+}
+.sidebar .block button,
+.sidebar .blockyellow button {
+  width: 100%;
+  min-height: 14px;
+  padding: 4px 4px;
+  text-align: left;
+  font-size: 10px;
+}
+.sidebar .gridsmallbutton {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2px;
+  margin-top: 3px;
+  padding-top: 3px;
+  border-top: 1px solid #cbd5df;
+}
+.sidebar .smallblock button {
+  width: 100%;
+  min-height: 14px;
+  padding: 3px 3px;
+  color: #243342;
+  font-size: 10px;
+  font-weight: 600;
+  text-align: left;
+}
+.main-content {
+  margin-left: 245px;
+  min-width: 0;
+}
+.main-content .builder {
+  margin-top: 0;
+}
+@media (max-width: 700px) {
+  .sidebar {
+    width: 175px;
+    padding: 8px;
+  }
+  .main-content {
+    margin-left: 190px;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="sidebar-title">MRI QUICK MESSAGES</div>
+
+<!-- ================= TOP BUTTONS GRID ================= -->
+<div class="grid">
+
+<div class="block">
+<button onclick="copyText('main')">📋 Screening</button>
+<textarea id="main" class="hidden">This patient has new MRI order(s). At your earliest convenience, could you please complete the MRI screening questionnaires in Epic? Please contact CUH MRI@214-633-4478 with any questions.
+ 
+To prepare the patient for the MRI, please provide the following information: 
+- How will the patient be transported to the MRI suite: by wheelchair or stretcher? 
+- Will the patient be able to lie flat and remain still during the MRI? 
+- Will the patient require any intravenous drips, O2 during the MRI? 
+- Could you please ask the patient if they need pain medication or anxiolytics? 
+Thank you!
+
+-----------------------------------------------------------------------------
+Telemetry Reminder for Nursing Staff
+For inpatients with an active telemetry order, please contact the ordering provider before sending the patient to MRI and request a nursing communication order authorizing the patient to be off telemetry during the exam (example below). If telemetry cannot be discontinued, an RN will be required to accompany the patient to MRI for monitoring.
+Example Order:
+IP NUR PHYSICIAN COMMUNICATION TO NURSING
+ Order comments: OK to go to MRI off telemetry.
+-----------------------------------------------------------------------------
+
+</textarea>
+</div>
+
+<div class="block">
+<button onclick="copyText('prep')">🧾 RN Coordination</button>
+<textarea id="prep" class="hidden">Hello, this is MRI, to prepare the patient for the MRI, could you please provide the following information? 
+
+- How will the patient be transported to the MRI suite: by wheelchair or stretcher? 
+- Will the patient be able to lie flat and remain still during the MRI? 
+- Will the patient require any intravenous drips, O2 during the MRI? 
+- Could you please ask the patient if they need pain medication or anxiolytics? 
+  Thank you!
+
+-----------------------------------------------------------------------------
+Telemetry Reminder for Nursing Staff
+For inpatients with an active telemetry order, please contact the ordering provider before sending the patient to MRI and request a nursing communication order authorizing the patient to be off telemetry during the exam (example below). If telemetry cannot be discontinued, an RN will be required to accompany the patient to MRI for monitoring.
+Example Order:
+IP NUR PHYSICIAN COMMUNICATION TO NURSING
+ Order comments: OK to go to MRI off telemetry.
+-----------------------------------------------------------------------------
+
+</textarea>
+</div>
+
+<div class="block">
+<button onclick="copyText('transport')">🚑 Patient Prep</button>
+<textarea id="transport" class="hidden">
+
+PATIENT READINESS FOR MRI
+
+=== MOST COMMON CAUSES OF MRI DELAYS ===
+
+1. Medication patches not removed prior to arrival.
+2. Patient arrives with an IV pump but no RN present.
+3. Patient arrives with telemetry still in place.
+
+Please ensure the following before transport to MRI:
+
+> Patient is changed into a hospital gown.
+> Remove all jewelry, body piercings, EKG electrodes, glucose sensors, medication patches, silver alginate wound dressings, electronic devices, telemetry equipment, and wound vacs.
+> Disconnect all IV drips/continuous infusions. If this is not possible, please contact MRI immediately. An RN may be required to accompany the patient and manage the infusion using MRI-compatible equipment.
+> Patient should empty their bladder prior to the exam.
+> Flush the peripheral IV line to confirm it is functional.
+
+--------------------------------------------------------------------------
+
+TELEMETRY REMINDER for NURSING STAFF
+
+For inpatients with an active telemetry order, please contact the ordering provider before sending the patient to MRI and request a Nursing Communication Order authorizing the patient to be off telemetry during the exam (see example below).
+All telemetry electrodes and the telemetry monitor/box must be removed prior to the MRI.
+If telemetry cannot be discontinued, an RN will be required to accompany the patient to MRI and provide continuous monitoring throughout the exam.
+Example Order:
+IP NUR PHYSICIAN COMMUNICATION TO NURSING
+Order comments: OK to go to MRI off telemetry.
+
+--------------------------------------------------------------------------
+
+</textarea>
+</div>
+
+<div class="block">
+  <button onclick="copyText('support')">🧠 ICU</button>
+  <textarea id="support" class="hidden">Hello, this is MRI, to prepare the patient for the MRI, could you please provide the following information? 
+
+- Will the patient be able to lie flat and remain still during the MRI? will the patient be sedated during MRI  ?  
+- Will the patient require any intravenous drips, intubated/O2 during the MRI? 
+  Thank you!</textarea>
+</div>
+
+
+<div class="block">
+<button onclick="copyText('SFfollowup')"> 📋SF not done? </button>
+<textarea id="SFfollowup" class="hidden">You may already have this on your radar, but please ensure the MRI screening questionnaires are completed so we can review and get the patient scheduled.
+</textarea>
+</div>
+
+<div class="block">
+  <button onclick="copyText('meds')">💊 Medication Order</button>
+  <textarea id="meds" class="hidden">Could you please let us know as soon as the medications are ordered? We'll then coordinate the MRI scan time. Importantly, do not administer the medications until we have confirmation that an MRI scanner is available for the patient. Thank you! </textarea>
+</div>
+
+<div class="block">
+  <button onclick="copyText('closing')">🚐 Zale Transfer</button>
+  <textarea id="closing" class="hidden">
+
+===================================================
+                           MRI TRANSFER PREPARATION
+                                 Zale -> CUH
+===================================================
+To prepare this patient for transfer from Zale to CUH for MRI, please complete the following assessment and readiness steps.
+
+PATIENT ASSESSMENT
+
+? Can the patient lie flat and remain still for the duration of the MRI exam?
+? Will the patient require supplemental oxygen during the MRI?
+? Will the patient require any IV drips/continuous infusions during the MRI?
+? Please confirm the patient has a working peripheral IV in place.
+? Will the patient require pain medication prior to the MRI?
+? Please assess whether the patient will require:
+	- Pain medication prior to the MRI.
+	- Anxiolytic medication (for anxiety or claustrophobia) prior to the MRI.
+	- Anesthesia
+
+--------------------------------------------------------------------------
+
+PATIENT READINESS
+
+> Patient is changed into a hospital gown.
+> Remove all jewelry, body piercings, EKG electrodes, glucose sensors, medication patches, silver alginate wound dressings, electronic devices, telemetry monitoring, and wound vacs.
+> Disconnect all IV drips/continuous infusions. If this is not possible, please contact MRI immediately.
+> Patient should empty their bladder prior to the exam.
+> Flush the peripheral IV line to confirm it is functional.
+
+--------------------------------------------------------------------------
+
+TELEMETRY REMINDER for NURSING STAFF
+
+For inpatients with an active telemetry order, please contact the ordering provider before sending the patient to MRI and request a nursing communication order authorizing the patient to be off telemetry during the exam (example below). If telemetry cannot be discontinued, an RN will be required to accompany the patient to MRI for monitoring.
+Example Order:
+IP NUR PHYSICIAN COMMUNICATION TO NURSING
+Order comments: OK to go to MRI off telemetry.
+
+--------------------------------------------------------------------------
+
+MEDICATION PREPARATION
+
+NOTE: Medications cannot be administered at CUH MRI. Please ensure all necessary pain and/or anxiety medications are ordered, administered, and effective prior to transport so the patient can tolerate the exam.
+
+--------------------------------------------------------------------------
+
+SCHEDULING & TRANSPORTATION
+
+@ Care Coordinator / Charge RN
+Please assist the Primary RN with MRI readiness. Scan time will be assigned once the assessment is complete and any required medication orders have been addressed. An appointment time will be provided once the patient is "MRI-ready". Thank you.
+
+--------------------------------------------------------------------------
+
+VISITOR INFORMATION
+
+Family members and visitors are not permitted in the CUH MRI scan area.
+
+Thank you for your cooperation.
+===================================================
+</textarea>
+</div>
+
+<div class="block">
+  <button onclick="copyText('AMSmeds')">💊 AMS Med Order</button>
+  <textarea id="AMSmeds" class="hidden">Given the noise levels during an MRI scan, which can be irritating for patients, and the requirement for prolonged stillness (at least 30 minutes), we're concerned about the patient's ability to cooperate. Would you please contact provider to see whether they can order medication to help the patient remain still during the scan, ensuring optimal diagnostic images? Thank you! </textarea>
+</div>
+
+<div class="block">
+  <button onclick="copyText('gtts')">Infusions gtt(s)? </button>
+  <textarea id="gtts" class="hidden">Can the infusions be paused? If not, an RN must come to MRI to transfer the drips to an MRI-compatible infusion pump. This process takes approximately 5 minutes, after which the RN can return to the unit.</textarea>
+</div>
+
+<div class="block">
+<button onclick="copyText('position')">⏱️ Scan Time?</button>
+<textarea id="position" class="hidden">We don't have a specific time yet. We'll send another message once the scanner is available for the patient. </textarea>
+</div>
+
+<div class="block">
+<button onclick="copyText('protocol')"> Protocol </button>
+<textarea id="protocol" class="hidden">Hello!
+When you get a chance, could you please review and get the MRI exam(s) protocoled? Thanks
+</textarea>
+</div>
+
+<div class="block">
+<button onclick="copyText('update')"> RN follow up </button>
+<textarea id="update" class="hidden">Could you please provide the information above so we can safely request the patient to come to MRI?
+</textarea>
+</div>
+
+<div class="block">
+<button onclick="copyText('15only')"> 💊Claustrophobia </button>
+<textarea id="15only" class="hidden">The screening questionnaire indicates claustrophobia. Could you please assess whether the patient may require anxiolytic medication prior to the MRI? If so, please obtain the appropriate order from the provider before the exam.
+
+</textarea>
+</div>
+
+<div class="block">
+<button onclick="copyText('schtime')"> ⏱️Schedule </button>
+<textarea id="schtime" class="hidden">Could we get this patient scheduled to come in * minutes  ?
+</textarea>
+</div>
+
+<div class="block">
+<button onclick="copyText('2ndattemptpain')"> ⏱️2nd attempt (pain) </button>
+<textarea id="2ndattemptpain" class="hidden">The patient was unable to tolerate yesterday's MRI due to pain. Despite the administration of pain medication (two doses given during the exam), the patient was unable to remain still, repeatedly moving his head, raising his arms... As this is the second attempt before considering general anesthesia, could pain management options be explored for today's MRI?
+
+</textarea>
+</div>
+
+
+<div class="block">
+<button onclick="copyText('2ndattemptanxiety')"> ⏱️2nd attempt (Claustrophobia) </button>
+<textarea id="2ndattemptanxiety" class="hidden">The patient was unable to tolerate yesterday's MRI due to anxiety. Despite the administration of anxiety medication (two doses given during the exam), the patient was unable to remain still, repeatedly moving his head, raising his arms... As this is the second attempt before considering general anesthesia, could you please evaluate if a higher dose of anxiolytics can be prescribed prior to today's repeat MRI?
+
+</textarea>
+</div>
+
+<div class="block">
+<button onclick="copyText('2ndattemptconfused')"> ⏱️2nd attempt (Confused) </button>
+<textarea id="2ndattemptconfused" class="hidden">Yesterday's MRI could not be completed due to patient confusion and subsequent motion artifact (repeatedly moving head and raising arms). The patient remained agitated despite receiving two doses of anxiety medication during the exam.
+Since this is our second attempt before scheduling MRI with general anesthesia, could you please evaluate if a higher dose of anxiolytics can be prescribed prior to today's repeat MRI?
+</textarea>
+</div>
+
+<div class="blockyellow">
+<button onclick="copyText('MRdown')"> ⏱️A scanner down </button>
+<textarea id="MRdown" class="hidden">
+To RN and Provider Teams,
+Please be advised that the MRI department currently has one scanner down for a scheduled upgrade this week. As a result, wait times today will be longer than usual.
+We are working diligently to manage the schedule and will get this patient scanned as soon as possible.
+Thank you so much for your understanding, collaboration, and patience as we improve our equipment.
+</textarea>
+</div>
+
+<div class="block">
+<button onclick="copyText('aftermidnight')"> ⏱️After midnight </button>
+<textarea id="aftermidnight" class="hidden">
+
+Hi RNs and Careteam,
+
+We are currently experiencing a very high volume of inpatient MRI requests, which may result in a 2 to 3-day delay for some scans. To help expedite patient care, we are opening up scan times after midnight.
+Could you please check with the patient (or their family) to see if they would be willing to come down for their MRI after-midnight (12am-0200am)? We completely understand if they prefer not to disrupt their sleep, but this option will get their exam completed much faster.
+Please let us know their preference as soon as possible. If they are willing, please reply with the following information:
+
+- How will the patient be transported to the MRI suite: by wheelchair or stretcher?
+- Will the patient be able to lie flat and remain still during the MRI?
+- Will the patient require any intravenous drips, O2 during the MRI?
+- Could you please ask the patient if they need pain medication or anxiolytics?
+
+Thank you!</textarea>
+</div>
+
+<div class="block">
+<button onclick="copyText('SFlink')"> 📖Link to SF </button>
+<textarea id="SFlink" class="hidden">
+Please use the link below for detailed instructions on how to access the MRI screening questionnaires:
+https://sway.cloud.microsoft/fDGUNOCjFKv91CNV?ref=Link  
+
+</textarea>
+</div>
+
+
+</div>
+
+<!-- ================= QUICK BUTTONS (also in left sidebar) ================= -->
+<div class="gridsmallbutton">
+
+<div class="smallblock">
+<button onclick="copyText('b1')">1</button>
+<textarea id="b1" class="hidden">The exam takes 30-40mins. Could you verify if the patient can hold still for the entire study? Also, Could you please ensure the patient is adequately medicated to tolerate these long exams ? Thank you.</textarea>
+</div>
+
+<div class="smallblock">
+<button onclick="copyText('b2')">2</button>
+<textarea id="b2" class="hidden">There are two exams scheduled, requiring at least 1.5 hours of table time. Could you verify if the patient can hold still for the entire study? Also, Could you please ensure the patient is adequately medicated to tolerate these long exams ? Thank you.</textarea>
+</div>
+
+<div class="smallblock">
+<button onclick="copyText('b3')">3</button>
+<textarea id="b3" class="hidden">There are 3 exams scheduled, requiring at least two hours of table time. Could you verify if the patient can hold still for the entire study? Also, Could you please ensure the patient is adequately medicated to tolerate these long exams ? Thank you.</textarea>
+</div>
+
+<div class="smallblock">
+  <button onclick="copyText('b4')">4</button>
+  <textarea id="b4" class="hidden">There are 4 exams scheduled, requiring at least 3 hours of table time. Could you verify if the patient can hold still for the entire study? Also, Could you please ensure the patient is adequately medicated to tolerate these long exams ? Thank you.
+</textarea>
+</div>
+
+
+<div class="smallblock">
+<button onclick="copyText('bZ')"> Z </button>
+<textarea id="bZ" class="hidden">Patient is scheduled to be scanned at ***. Could you please arrange CareFlite for a round-trip transfer to MR1/MR2 (1st Floor, Blue Tower)? The patient needs to arrive at *** for a 30-minute scan.
+Note: Medication will not be administered at CUH. Please ensure the patient is medicated beforehand to tolerate the extended exam time. Thank you!</textarea>
+</div>
+
+<div class="smallblock">
+  <button onclick="copyText('b6')">sch</button>
+  <textarea id="b6" class="hidden">This patient is scheduled for tomorrow at *:00 AM. Could you please pass this along to the incoming shift so they can assist with getting the patient prepared? Thank you! </textarea>
+</div>
+
+
+<div class="smallblock">
+  <button onclick="copyText('b7')">am</button>
+  <textarea id="b7" class="hidden">Offering early AM. DT</textarea>
+</div>
+
+<div class="smallblock">
+  <button onclick="copyText('b8')" style="background-color:#f5f7fa;">8</button>
+  <textarea id="b8" class="hidden">Given the noise levels during an MRI scan, which can be irritating for patients, and the requirement for prolonged stillness (at least 30 minutes), we're concerned about the patient's ability to cooperate. Would you please contact provider to see whether they can order medication to help the patient remain still during the scan, ensuring optimal diagnostic images? Thank you! </textarea>
+</div>
+
+<div class="smallblock">
+  <button onclick="copyText('b9')" style="background-color:#f5f7fa;">9</button>
+  <textarea id="b9" class="hidden">Can the infusions be paused? If not, an RN must come to MRI to transfer the drips to an MRI-compatible infusion pump. This process takes approximately 5 minutes, after which the RN can return to the unit.</textarea>
+</div>
+
+<div class="smallblock">
+<button onclick="copyText('b10')" style="background-color:#f5f7fa;">10</button>
+<textarea id="b10" class="hidden">We don't have a specific time yet. We'll send another message once the scanner is available for the patient. </textarea>
+</div>
+
+<div class="smallblock">
+<button onclick="copyText('b11')" style="background-color:#f5f7fa;"> 11 </button>
+<textarea id="b11" class="hidden">Hello!
+When you get a chance, could you please review and get the MRI exam(s) protocoled? Thanks
+</textarea>
+</div>
+
+<div class="smallblock">
+<button onclick="copyText('b12')"> 1.5T </button>
+<textarea id="b12" class="hidden">1.5T Scanner only due to
+</textarea>
+</div>
+
+<div class="smallblock">
+<button onclick="copyText('b13')"> EP </button>
+<textarea id="b13" class="hidden">CIED Programming Needed for MRI Presence of cardiac device
+</textarea>
+</div>
+
+<div class="smallblock">
+<button onclick="copyText('b14')"> ✓ </button>
+<textarea id="b14" class="hidden">
+
+Transport has been requested. Please print the Ticket to Ride and notify the patient so they are prepared when transport arrives. Thank you !
+
+=============================================================
+PATIENT READINESS FOR MRI
+=============================================================
+<<< IMPORTANT REMINDERS >>>
+
+Patients frequently arrive for MRI with:
+- Medication patches still in place
+- IV pumps without an accompanying RN
+- Telemetry equipment still attached
+
+These issues may result in delays, rescheduling, or cancellation of the exam.
+
+Please ensure the following before transport to MRI:
+
+> Patient is changed into a hospital gown.
+> Remove all jewelry, body piercings, EKG electrodes, glucose sensors, medication patches, silver alginate wound dressings, electronic devices, telemetry equipment, and wound vacs.
+> Disconnect all IV drips/continuous infusions. If this is not possible, please contact MRI immediately.
+> Patient should empty their bladder prior to the exam.
+> Flush the peripheral IV line to confirm it is functional.
+=============================================================
+</textarea>
+</div>
+
+<div class="smallblock">
+<button onclick="copyText('b15')"> npo </button>
+<textarea id="b15" class="hidden">For the scheduled MRI MRCP, NPO status is required per protocol. Please confirm the time of the patient's last meal.</textarea>
+</div>
+
+<div class="smallblock">
+<button onclick="copyText('b16')"> --> </button>
+<textarea id="b16" class="hidden">Adding the next-shift MRI Team Lead to assist with follow-up and ensure timely completion of the MRI.</textarea>
+</div>
+
+</div>
+
+  </aside>
+
+  <main class="main-content">
+<!-- ================= NEW BUILDER ================= -->
+<div class="builder">
+
+<h5>🚑 MRI Transport & Patient Status</h5>
+
+<div class="buttons">
+
+<button onclick="setTransport(this,'wheelchair')">🦽 Wheelchair</button>
+<button onclick="setTransport(this,'stretcher')">🛏️ Stretcher</button>
+<button onclick="setTransport(this,'bed')">🛌 Bed</button>
+
+<button id="aoBtn" onclick="cycleAO(this)">🧠 A&O x 4</button>
+<button onclick="toggle(this,'confused')">⚠️ Confused</button>
+
+<button id="o2Btn" onclick="cycleO2(this)">🫁 O2/Airway</button>
+<button onclick="toggle(this,'patient is intubated')">🫁 Intubated</button>
+<button id="dripBtn" onclick="cycleDrips(this)">💧 Drips: 0/1/2/3/4</button>
+
+<button onclick="toggle(this,'IV anxiety meds will be given')">💊 IV Anxiety</button>
+<button onclick="toggle(this,'PO meds will be given')">💊 PO Anxiety</button>
+<button onclick="toggle(this,'pain meds will be given')">💊 Pain</button>
+
+<button onclick="toggle(this,'needs 30 mins heads up')">⏱️ 30min Heads up</button>
+
+<button onclick="toggle(this,'med patches will be removed')">🩹 Patches</button>
+<button onclick="toggle(this,'no medications needed')">💊 No meds</button>
+<button id="npoBtn" onclick="cycleNPO(this)">🍽️ NPO: None</button>
+
+<button onclick="toggle(this,'nothing attached')">✅ Nothing attached</button>
+
+</div>
+<div class="hidbtn">
+<button onclick="toggle(this,'Sent a message to the patient requesting completion of the screening questionnaires. DT')">  </button>
+<button onclick="toggle(this,'Sent a message to the patient requesting completion of the screening questionnaires. DT')">  </button>
+<button onclick="toggle(this,'Sent a message to the patient requesting completion of the screening questionnaires. DT')">  </button>
+
+</div>
+
+<textarea id="builderOutput" class="output"></textarea>
+<!===== Clear/Copy Buttons ========= Clear/Copy Buttons ====== Clear/Copy Buttons ===== ===->
+<div style="display:flex; gap:10px; margin-top:10px;">
+<div style="display:flex; gap:10px;flex-wrap:wrap;">
+  
+  <button class="copy-btn" onclick="copyBuilder()">📋 Copy</button>
+  <button class="clear-btn" onclick="clearBuilder()">🧹 Clear</button>
+
+  <!-- ===== Bottom Buttons ========= Bottom Buttons ====== Bottom Buttons ===== Bottom Buttons ===-->
+
+  <div style="width:100%; display:grid; grid-template-columns: repeat(7, 1fr); gap:8px; margin-top:8px;">
+
+    <button class="bottombuttons" onclick="openContrastPopup()">Contrast Allergy</button>
+    <button class="bottombuttons" onclick="openCIEDPopup()">Pacemaker/ICD Stimulator</button>
+    <button class="bottombuttons" onclick="openDialysisPopup()">Dialysis/Anesthesia</button>
+    <button class="bottombuttons" onclick="openPumpPopup()">PCA/Pain/Hepatic Pump</button>
+    <button class="bottombuttons" onclick="openDeviceVendorsPopup()">⚡Device Vendors</button>
+    <button class="bottombuttons" onclick="openUsefulLinksPopup()">🔗Useful Links</button>
+    <button class="bottombuttons" onclick="openContactPopup()">📞Contact List</button>
+  </div>
+</div>
+</div>
+
+</div><!-- close builder -->
+  </main>
+</div><!-- close app-layout -->
+
+<!-- ===== Contrast Popup Buttons===== ===== Contrast Popup Buttons========== Contrast Popup Buttons=================-->
+<div id="contrastPopup" style="display:none; position:fixed; top:25%; left:50%; transform:translate(-50%,-25%); background:white; padding:20px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.3); z-index:1001; width:400px; text-align:center;">
+
+  <h4>Contrast Options</h4>
+  	<button onclick="insertContrast('verify')" style="width:100%; text-align:left;">
+  <b>Verify allergies</b><br>
+  <small>Patient marked "yes" for MRI contrast reaction → re-interview</small>
+</button>
+	<button onclick="insertContrast('ctmr')" style="width:100%; text-align:left;">
+  <b>CT vs MR contrast</b><br>
+  <small>Iodine vs gadolinium — not cross-allergic</small>
+</button>
+	<button onclick="insertContrast('premedinpt')" style="width:100%; text-align:left;">
+  <b>Premed regimens - Inpatient</b><br>
+  <small>5-hour steroid + Benadryl protocols</small>
+</button>
+	<button onclick="insertContrast('opt1')" style="width:100%; text-align:left;">
+  <b>Option 1 schedule - Inpatient</b><br>
+  <small>Solu-Medrol + Benadryl timing template</small>
+</button>
+	<button onclick="insertContrast('opt2')" style="width:100%; text-align:left;">
+  <b>Option 2 schedule - Inpatient</b><br>
+  <small>Decadron + Benadryl timing template</small>
+</button>
+	<button onclick="insertContrast('premedoutpt')" style="width:100%; text-align:left;">
+  <b>Premed regimens - Outpatient</b><br>
+  <small>13-hour or 12-hour PO meds</small>
+</button>
+
+<div style="text-align:right; margin-top:10px;">
+<button onclick="closeContrastPopup()" style="background:#dc3545;color:white;padding:8px 18px;border:none;border-radius:6px;cursor:pointer;">Close</button>
+</div>
+	
+</div>
+
+<div id="overlayContrast" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:1000;" onclick="closeContrastPopup()">
+
+</div>
+
+
+<!-- ===== CIEDPopup Buttons===== ===== CIEDPopup Buttons========== CIEDPopup Buttons=================-->
+
+<div id="CIEDPopup" style="display:none; position:fixed; top:25%; left:50%; transform:translate(-50%,-25%); background:white; padding:20px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.3); z-index:1001; width:400px; text-align:center;">
+
+  <h4>Pacemaker/ICD/Stimulator Options</h4>
+  	<button onclick="insertCIED('CIEDopt1')" style="width:100%; text-align:left;">
+  <b>Pacemaker/ICD Implant ID Card Request</b><br>
+  <small>RN scan ID card → Media Manager</small>
+</button>
+	<button onclick="insertCIED('CIEDopt2')" style="width:100%; text-align:left;">
+  <b>CIED after hours</b><br>
+  <small>Monday-Friday — 9am to 2pm</small>
+</button>
+	<button onclick="insertCIED('CIEDopt3')" style="width:100%; text-align:left;">
+  <b>NeuroStimulator Implant ID card request </b><br>
+  <small>RN scan ID Media Manager</small>
+</button>
+	<button onclick="insertCIED('CIEDopt4')" style="width:100%; text-align:left;">
+  <b>TBD2</b><br>
+  <small> </small>
+</button>
+	<button onclick="insertCIED('CIEDopt5')" style="width:100%; text-align:left;">
+  <b>TBD3</b><br>
+  <small>TBD3</small>
+</button>
+	<button onclick="insertCIED('CIEDopt6')" style="width:100%; text-align:left;">
+  <b>TBD4</b><br>
+  <small>TBD4</small>
+</button>
+
+<div style="text-align:right; margin-top:10px;">
+<button onclick="closeCIEDPopup()" style="background:#dc3545;color:white;padding:8px 18px;border:none;border-radius:6px;cursor:pointer;">Close</button>
+</div>
+
+</div>
+
+<div id="overlayCIED" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:1000;" onclick="closeCIEDPopup()">
+
+</div>
+
+
+<!-- ===== DialysisPopup Buttons===== ===== DialysisPopup Buttons=============== DialysisPopup Buttons===== =================-->
+
+<div id="dialysisPopup" style="display:none; position:fixed; top:25%; left:50%; transform:translate(-50%,-25%); background:white; padding:20px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.3); z-index:1001; width:400px; text-align:center;">
+
+  <h4>Dialysis/Anesthesia Options</h4>
+  	<button onclick="insertDialysis('Dialysisopt1')" style="width:100%; text-align:left;">
+  <b>Recent MRI < 24hours - normal GFR</b><br>
+  <small>24-hour wait period</small>
+</button>
+	<button onclick="insertDialysis('Dialysisopt2')" style="width:100%; text-align:left;">
+  <b>Recent MRI < 24hours - GFR<15 or Dialysis</b><br>
+  <small>96-hour wait period</small>
+</button>
+	<button onclick="insertDialysis('Dialysisopt3')" style="width:100%; text-align:left;">
+  <b>Request for Dialysis Schedule </b><br>
+  <small>dialysis schedule</small>
+</button>
+	<button onclick="insertDialysis('Dialysisopt4')" style="width:100%; text-align:left;">
+  <b>Anesthesia</b><br>
+  <small>NPO after midnight for GA</small>
+</button>
+	<button onclick="insertDialysis('Dialysisopt5')" style="width:100%; text-align:left;">
+  <b>Anesthesia Requirements</b><br>
+  <small>Provider -> Anesthesiologist</small>
+</button>
+	<button onclick="insertDialysis('Dialysisopt6')" style="width:100%; text-align:left;">
+  <b>Message to provider</b><br>
+  <small>1st call to call 38196</small>
+</button>
+
+<div style="text-align:right; margin-top:10px;">
+<button onclick="closeDialysisPopup()" style="background:#dc3545;color:white;padding:8px 18px;border:none;border-radius:6px;cursor:pointer;">Close</button>
+</div>
+
+ 	
+</div>
+
+<div id="overlayDialysis" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:1000;" onclick="closeDialysisPopup()">
+
+</div>
+
+<!-- ===== PumpPopup Buttons===== =====  PumpPopup Buttonss==========  PumpPopup Buttons=================-->
+
+<div id="PumpPopup" style="display:none; position:fixed; top:25%; left:50%; transform:translate(-50%,-25%); background:white; padding:20px; border-radius:10px; box-shadow:0 4px 10px rgba(0,0,0,0.3); z-index:1001; width:400px; text-align:center;">
+
+  <h4>PCA/Pain/Hepatic Options</h4>
+
+  	<button onclick="insertPump('Pumpopt1')" style="width:100%; text-align:left;">
+  <b>Medtronic SynchroMed Pain Pump</b><br>
+  <small>Need PMR → check after</small>
+</button>
+	<button onclick="insertPump('Pumpopt2')" style="width:100%; text-align:left;">
+  <b>PCA Pain Pump</b><br>
+  <small>PCA -> disconnect order</small>
+</button>
+	<button onclick="insertPump('Pumpopt3')" style="width:100%; text-align:left;">
+  <b>HAIP is managed by UTSW Surgical and Medical Oncology providers, </b><br>
+  <small>active or inactive drugs are approved</small>
+</button>
+	<button onclick="insertPump('Pumpopt4')" style="width:100%; text-align:left;">
+  <b>HAIP is NOT managed by UTSW Surgical and Medical Oncology providers</b><br>
+  <small>active drugs not on approval list must be emptied</small>
+</button>
+	<button onclick="insertPump('Pumpopt5')" style="width:100%; text-align:left;">
+  <b>OptiFlow</b><br>
+  <small>OptiFLow</small>
+</button>
+	<button onclick="insertPump('Pumpopt6')" style="width:100%; text-align:left;">
+  <b>Nasal Cannula trial</b><br>
+  <small>NC</small>
+</button>
+
+<div style="text-align:right; margin-top:20px;">
+<button onclick="closePumpPopup()" style="background:#dc3545;color:white;padding:8px 18px;border:none;border-radius:6px;cursor:pointer;">Close</button>
+</div>
+
+</div>
+
+<div id="overlayPump" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:1000;" onclick="closePumpPopup()">
+</div>
+
+<!-- ================= CONTACT LIST POPUP ================= -->
+
+<div id="contactPopup"
+     style="display:none;
+            position:fixed;
+            top:15%;
+            left:50%;
+            transform:translate(-50%,-5%);
+            background:#F4F6F6;
+            width:500px;
+            max-height:75vh;
+            overflow-y:auto;
+            padding:20px;
+            border-radius:10px;
+            box-shadow:0 4px 10px rgba(0,0,0,.35);
+            z-index:1001;">
+
+
+<h3 style="margin-top:0;">📞 MRI Contact List</h3>
+
+<table style="width:100%; border-collapse:collapse; font-size:14px;">
+<tr style="background:#0078D4;color:white;">
+    <th style="padding:8px;text-align:left;">Location</th>
+    <th style="padding:8px;">Extension</th>
+    <th style="padding:8px;">Phone</th>
+</tr>
+
+<tr><td colspan="3" style="background:#bfc9ca;"><b>MRI Locations</b></td></tr>
+
+<tr><td>CUH</td><td align="center">34478</td><td align="center">214-633-4478</td></tr>
+<tr><td>CUH Main MR Fax</td><td align="center"></td><td align="center">214-633-1463</td></tr>
+<tr><td>CUH transport lead</td><td align="center">38180</td><td align="center">214-633-8180</td></tr>
+
+<tr><td>CCOB</td><td align="center">20031</td><td align="center">469-852-0031 / 0033</td></tr>
+<tr><td>Moncrief CI</td><td align="center"></td><td align="center">817-288-9776</td></tr>
+<tr><td>Moncrief MC</td><td align="center"></td><td align="center">817-882-2652</td></tr>
+<tr><td>North Campus</td><td align="center">52573</td><td align="center">214-645-2573</td></tr>
+<tr><td>OPB</td><td align="center">53468</td><td align="center">214-645-3468</td></tr>
+<tr><td>Richardson</td><td align="center"></td><td align="center">972-669-7228</td></tr>
+<tr><td>Red Bird</td><td align="center"></td><td align="center">469-372-2680</td></tr>
+<tr><td>Rogers</td><td align="center">57691/57692</td><td align="center">214-645-7691 / 7692</td></tr>
+<tr><td>RTR</td><td align="center"></td><td align="center">214-648-5832</td></tr>
+<tr><td>PET MR</td><td align="center">52041</td><td align="center">214-645-2041</td></tr>
+
+
+<tr><td colspan="3" style="background:#bfc9ca;"><b>Outpatient Building</b></td></tr>
+
+<tr><td>CT</td><td align="center">53459</td><td align="center">214-645-3459</td></tr>
+<tr><td>Diagnostic Imaging</td><td align="center">57991</td><td align="center">214-645-7991</td></tr>
+<tr><td>Front Desk 2</td><td align="center">53453</td><td align="center">214-645-3453</td></tr>
+<tr><td>Imaging</td><td align="center">53455</td><td align="center">214-645-3455</td></tr>
+<tr><td>MRI</td><td align="center">53468</td><td align="center">214-645-3468</td></tr>
+<tr><td>Ultrasound</td><td align="center">53456</td><td align="center">214-645-3456</td></tr>
+
+<tr><td colspan="3" style="background:#bfc9ca;"><b>PET</b></td></tr>
+
+<tr><td>PET Imaging Facility</td><td align="center">56482</td><td align="center">214-645-6482</td></tr>
+
+<tr><td colspan="3" style="background:#bfc9ca;"><b>POB II</b></td></tr>
+
+<tr><td>Front Desk</td><td align="center">55129</td><td align="center">214-645-5129</td></tr>
+<tr><td>SPECT</td><td align="center">55188</td><td align="center">214-645-5188</td></tr>
+<tr><td>Technologist Work Area</td><td align="center">51601</td><td align="center">214-645-1601</td></tr>
+<tr><td>Ultrasound</td><td align="center">51587</td><td align="center">214-645-1587</td></tr>
+
+</div>
+</div>
+
+</table>
+
+<br>
+<div style="text-align:right; margin-top:10px;">
+<button onclick="closeContactPopup()" style="background:#dc3545;color:white;padding:8px 18px;border:none;border-radius:6px;cursor:pointer;">Close</button>
+</div>
+</div>
+
+<div id="overlayContact" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:1000;" onclick="closeContactPopup()">
+
+</div>
+
+</div>
+
+<!-- ================= USEFUL LINKS POPUP ================= -->
+
+<div id="usefulLinksPopup"
+     style="display:none;
+            position:fixed;
+            top:15%;
+            left:50%;
+            transform:translate(-50%,-5%);
+            background:#F4F6F6;
+            width:700px;
+            max-height:75vh;
+            overflow-y:auto;
+            padding:20px;
+            border-radius:10px;
+            box-shadow:0 4px 10px rgba(0,0,0,.35);
+            z-index:1001;">
+
+    <h4 style="margin-top:0;">🔗 Useful Links</h4>
+
+    <div style="padding:5px 0;">
+        
+       📚<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hs_ImagingServices/SitePages/Imaging*20Services*20Department*20Resources.aspx__;JSUl!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXplGPULAbQ$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           Department Resources
+        </a>
+	🗄️<a href="https://urldefense.com/v3/__https://365utsouthwestern-my.sharepoint.com/:x:/g/personal/mrisafety_utsouthwestern_edu/EQHUoyOgmC9Ku1fffLlScCMBCb4tzt1uC8CFL-YSyz9ujQ__;!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpnPh1yfhg$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           MRI Safety Database
+        </a>
+	👥<a href="https://365utsouthwestern.sharepoint.com/:x:/r/sites/hs_ImagingServices/_layouts/15/Doc.aspx?sourcedoc=%7BD8A1E2DD-D070-49E0-85D3-7A7C041E9B83%7D&file=Magnet%20Exam%20Distribution%20List.xlsx&action=default&mobileredirect=true" style="color:#0000FF;
+           text-decoration:underline;">
+           MRI Distribution List
+        </a>
+    </div>
+
+    <div style="padding:5px 0;">
+        🔗<a href="https://urldefense.com/v3/__https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=lYZBnaxxMUy1ssGWyOw8incCR23o4SBIpmV3IPIz5aBUM1pSNjJNRVo4TVBISVBOT1pMSTU0V05JNC4u__;!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpkmO03M5A$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           HIFU - Image Quality Improvement Link
+        </a>
+    </div>
+
+     <div style="padding:5px 0;">
+        📞<a href="https://oncall.swmed.edu/amcom/amcomweb/"
+           target="_blank"
+           style="color:#0000FF;
+           text-decoration:underline;">
+           On-Call Portal
+        </a>
+          🫁<a href="https://urldefense.com/v3/__https://app.qgenda.com/Link/view?linkKey=21348dd4-8123-4857-a68c-5dd6d95f1d68__;!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpmwDE6STw$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+          Body
+        </a>
+	 🦴<a href="https://urldefense.com/v3/__https://app.qgenda.com/Link/view?linkKey=2338aa72-e98d-41e8-bc83-a8997bf85204__;!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXplskEqryw$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+         MSK
+        </a>
+	  🫀<a href="https://urldefense.com/v3/__https://app.qgenda.com/Link/view?linkKey=0233206f-0925-4ccf-a43e-39e485d865cf__;!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpmCNfibrg$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           Cardiac
+        </a>
+	  🧠<a href="https://urldefense.com/v3/__https://app.qgenda.com/Link/view?linkKey=0233206f-0925-4ccf-a43e-39e485d865cf__;!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpmCNfibrg$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           Neuro
+        </a>
+
+    </div>
+
+    <div style="padding:5px 0;">
+	🎓<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/:x:/r/sites/cuhpreceptors/_layouts/15/Doc.aspx?sourcedoc=*7B3DCFC2E4-3878-4BCC-8257-19977137B6CD*7D&amp;file=CUH*20MRI*20Preceptor*20Training*20MyTime*20Log.xlsx&amp;action=default&amp;mobileredirect=true__;JSUlJSUlJQ!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpm0a3skuA$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           Preceptor Log
+        </a>
+
+          🛠️<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/:x:/r/sites/cuhmri/_layouts/15/Doc.aspx?sourcedoc=*7B52EF8AC9-5112-47B8-8766-5450BA6E876A*7D&amp;file=CUH*20MRI*20Service*20Call*20Log.xlsx&amp;action=default&amp;mobileredirect=true__;JSUlJSUl!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpkqmn9R1g$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           CUH Service Log
+        </a>
+    </div>
+     <div style="padding:5px 0;">
+       🏆<a href="https://hroras2.swmed.edu:447/pact/default.aspx"
+           target="_blank"
+           style="color:#0000FF;
+           text-decoration:underline;">
+           PACT - Employee Recognition
+        </a>
+	🚨<a href="https://rl.swmed.org/RL6_Prod/Homecenter/Client/Login.aspx?ReturnUrl=%2fRL6_Prod%2f"
+           target="_blank"
+           style="color:#0000FF;
+           text-decoration:underline;">
+           Event Report
+        </a>
+    </div>
+    
+
+    <div style="padding:5px 0;">
+        
+    </div>
+<h4 style="margin-top:0;">🔗 MRI Forms</h4>
+    <div style="padding:1px 0;">
+       🤰<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hsp_HIMForms/Shared*20Documents/Forms/AllItems.aspx?id=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents*2FMRI*20Gadolinium*20Pregnancy*20Declaration*20*2D*207210*2D1400*2Epdf&amp;parent=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents__;JSUlJSUlJSUlJSUlJSUlJSUlJSU!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpk4b57JRg$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           Pregnancy Declaration
+        </a>
+	<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hsp_HIMForms/Shared*20Documents/Forms/AllItems.aspx?id=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents*2FMRI*20Gadolinium*20Pregnancy*20Declaration*20*2D*207210*2D1400SP*20*2D*20SPANISH*2Epdf&amp;parent=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents__;JSUlJSUlJSUlJSUlJSUlJSUlJSUlJSU!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpknmgE-ww$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           <sup style="font-size:11px;">🌎🇪🇸</sup>
+        </a>
+
+	📝<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hsp_HIMForms/Shared*20Documents/Forms/AllItems.aspx?id=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents*2FMRI*20Gadolinium*20Pregnancy*20Consent*20*2D*207210*2D1389*2Epdf&amp;parent=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents__;JSUlJSUlJSUlJSUlJSUlJSUlJSU!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpnG5Sepww$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           Pregnancy Consent
+        </a>
+	<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hsp_HIMForms/Shared*20Documents/Forms/AllItems.aspx?id=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents*2FMRI*20Gadolinium*20Pregnancy*20Consent*20*2D*207210*2D1389SP*20*2D*20SPANISH*2Epdf&amp;parent=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents__;JSUlJSUlJSUlJSUlJSUlJSUlJSUlJSU!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpmaWZWH_Q$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           <sup style="font-size:11px;">🌎🇪🇸</sup>
+        </a>
+
+	📝<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hsp_HIMForms/Shared*20Documents/Forms/AllItems.aspx?id=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents*2FMRI*20Contrast*20for*20Nursing*20Mothers*20*2D*207210*2D1351*2Epdf&amp;parent=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents__;JSUlJSUlJSUlJSUlJSUlJSUlJSUl!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpnkB-VXRQ$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           Nursing Mothers
+        </a>
+	<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hsp_HIMForms/Shared*20Documents/Forms/AllItems.aspx?id=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents*2FMRI*20Contrast*20for*20Nursing*20Mothers*207210*2D1351SP*20*2D*20SPANISH*2Epdf&amp;parent=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents__;JSUlJSUlJSUlJSUlJSUlJSUlJSUlJQ!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpnrLLLSQQ$" target="_blank" style="color:#0000FF;">
+           <sup style="font-size:11px;">🌎🇪🇸</sup>
+        </a>
+     
+
+    </div>
+   
+    <div style="padding:6px 0;">
+       🧲<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hsp_HIMForms/Shared*20Documents/Forms/AllItems.aspx?id=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents*2FMRI*20Met*20Objects*20*2D7210*2D1398*2Epdf&amp;parent=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents__;JSUlJSUlJSUlJSUlJSUlJSUl!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpm850D8SA$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           Metallic Objects Consent
+        </a>
+	<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hsp_HIMForms/Shared*20Documents/Forms/AllItems.aspx?id=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents*2FMRI*20Met*20Objects*20*2D7210*2D1398SP*20*2D*20SPANISH*2Epdf&amp;parent=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents__;JSUlJSUlJSUlJSUlJSUlJSUlJSUl!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpkKXhx2TQ$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           <sup style="font-size:11px;">🌎🇪🇸</sup>
+        </a>
+
+	💉<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hsp_HIMForms/Shared*20Documents/Forms/AllItems.aspx?id=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents*2FAdministration*20of*20Gadolinium*20in*20Renal*20Dysfunction*207210*2D1388*2Epdf&amp;parent=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents__;JSUlJSUlJSUlJSUlJSUlJSUlJSU!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpnZjKPgLA$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           Consent for Gad Admin
+        </a>
+	<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hsp_HIMForms/Shared*20Documents/Forms/AllItems.aspx?id=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents*2FAdministration*20of*20Gadolinium*20in*20Renal*20Dysfunction*207210*2D1388SP*20*2D*20Spanish*2Epdf&amp;parent=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents__;JSUlJSUlJSUlJSUlJSUlJSUlJSUlJSU!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpmTFYUkYg$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           <sup style="font-size:11px;">🌎🇪🇸</sup>
+        </a>
+	🩸<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hsp_HIMForms/Shared*20Documents/Forms/AllItems.aspx?id=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents*2FContrast*20Extravasation*20Instructions*20for*20Patients*20*2D*207210*2D3000*2Epdf&amp;parent=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents__;JSUlJSUlJSUlJSUlJSUlJSUlJSUl!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpmXy6Cfjw$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           Extravasation
+        </a>
+	<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hsp_HIMForms/Shared*20Documents/Forms/AllItems.aspx?id=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents*2FContrast*20Extravasation*20Instructions*20for*20Patients*20*2D*204002*2D209SP*20*2D*20SPANISH*2Epdf&amp;parent=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents__;JSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUl!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpmFf_Wk5Q$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           <sup style="font-size:11px;">🌎🇪🇸</sup>
+        </a>
+
+    </div>
+
+    <div style="padding:6px 0;">
+       🔒<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hsp_HIMForms/Shared*20Documents/Forms/AllItems.aspx?id=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents*2FAuthorization*20to*20Disclose*20Protected*20Health*20Information*20*2D*207680*2D001*2Epdf&amp;parent=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents__;JSUlJSUlJSUlJSUlJSUlJSUlJSUlJQ!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpluayNZcQ$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           PHI
+        </a>
+	<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hsp_HIMForms/Shared*20Documents/Forms/AllItems.aspx?id=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents*2FAuthorization*20to*20Disclose*20Protected*20Health*20Information*20*2D*207680*2D001SP*20*2D*20SPANISH*2Epdf&amp;parent=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents__;JSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJQ!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXplvU184Fw$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           <sup style="font-size:11px;">🌎🇪🇸</sup>
+        </a>
+
+	🛡️<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hsp_HIMForms/Shared*20Documents/Forms/AllItems.aspx?id=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents*2FMRI*20Pre*2DScreening*20Questionnaire*20*2D*207210*2D1310*2Epdf&amp;parent=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents__;JSUlJSUlJSUlJSUlJSUlJSUlJSU!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpmq2z28sw$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           MRI Screening
+        </a>
+	<a href="https://urldefense.com/v3/__https://365utsouthwestern.sharepoint.com/sites/hsp_HIMForms/Shared*20Documents/Forms/AllItems.aspx?id=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents*2FMRI*20Pre*2DScreening*20Questionnaire*20*2D*207210*2D1310SP*20*2D*20SPANISH*2Epdf&amp;parent=*2Fsites*2Fhsp*5FHIMForms*2FShared*20Documents__;JSUlJSUlJSUlJSUlJSUlJSUlJSUlJSU!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpknZt_7BA$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           <sup style="font-size:11px;">🌎🇪🇸</sup>
+        </a>
+	📝<a href="https://urldefense.com/v3/__https://365utsouthwestern-my.sharepoint.com/shared?listurl=https*3A*2F*2F365utsouthwestern*2Esharepoint*2Ecom*2Fsites*2Fcuhmri*2FShared*20Documents&amp;viewid=aa352769*2Db4e7*2D40d1*2D9662*2D855436fdac2b&amp;id=*2Fsites*2Fcuhmri*2FShared*20Documents*2F4*2E*20Forms*2FWork*20School*20Release*20Form*2Epdf&amp;parent=*2Fsites*2Fcuhmri*2FShared*20Documents*2F4*2E*20Forms__;JSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSU!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXplFp7MOcA$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           Work/School Release
+        </a>
+	<div style="padding:6px 0;">
+       📝<a href="https://365utsouthwestern.sharepoint.com/:b:/r/sites/cuhmri/Shared%20Documents/4.%20Forms/MR%20Screening%20Form%20for%20Staff.pdf?d=w8108935f88ed4ba28a7cf48a7742fe64&csf=1&web=1&e=qau1S8" style="color:#0000FF;
+           text-decoration:underline;">
+           STAFF MRI Screening Form
+        </a>
+	  🏥<a href="https://www.utsouthwestern.net/" style="color:#0000FF;
+           text-decoration:underline;">
+           My UTSW Website - Procurement
+
+    </div>
+
+<div style="margin-top:20px; text-align:right;">
+
+    <button onclick="closeUsefulLinksPopup()" style="background:#dc3545;color:white;padding:8px 18px;border:none;border-radius:6px;cursor:pointer;">Close</button>
+
+</div>
+</div>
+</div>
+
+<div id="overlayUsefulLinks" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:1000;" onclick="closeUsefulLinksPopup()">
+</div>
+</div>
+
+<!-- ================================= DEVICE VENDORS POPUP =========================================== -->
+
+<div id="deviceVendorsPopup"
+     style="display:none;
+            position:fixed;
+            top:15%;
+            left:50%;
+            transform:translate(-50%,-5%);
+            background:#F4F6F6;
+            width:500px;
+            max-height:75vh;
+            overflow-y:auto;
+            padding:20px;
+            border-radius:10px;
+            box-shadow:0 4px 10px rgba(0,0,0,.35);
+            z-index:1001;">
+
+    <h3 style="margin-top:0;">🔗 Device Vendors
+</h3>
+
+    <div style="padding:10px 0;">
+        <span style="color:#0000FF;">1. </span> <a href="https://urldefense.com/v3/__https://www.medtronichub.com/mriverify/__;!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpndQtIW7A$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           <span style="color:#0000FF; font-weight:bold;">Medtronic</span> MRI Verify
+        </a>
+	          <a href="https://urldefense.com/v3/__https://manuals.medtronic.com/manuals/mri/en_US/search/index__;!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpm0L-BRYA$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           <span style="color:#0000FF; font-weight:bold;">Medtronic</span> MRI Resource Library
+           </a>
+    </div>
+	   
+    <div style="padding:10px 0;">
+        <span style="color:#0000FF;">2. </span> <a href="https://urldefense.com/v3/__https://mri.merlin.net/__;!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpn_ZnxjsA$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           <span style="color:#0000FF; font-weight:bold;">Abbott</span> (Pacemaker/ICD)
+        </a>
+	<a href="https://urldefense.com/v3/__https://manuals.eifu.abbott/en/hcp/home.html__;!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpmjb3oDBA$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           <span style="color:#0000FF; font-weight:bold;margin-left:50px;">Abbott</span> Manuals Search (others)
+        </a>
+
+    </div>
+
+    <div style="padding:10px 0;">
+        <span style="color:#0000FF;">3. </span> <a href="https://urldefense.com/v3/__https://www.bostonscientific.com/elabeling/us/en/home.html__;!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpmIEnjoKA$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           <span style="color:#0000FF; font-weight:bold;">Boston Scientific</span> Homepage
+        </a>
+	          <a href="https://urldefense.com/v3/__https://www.bostonscientific.com/imageready/en-US/model-lookup.html__;!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpkjl638dg$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           <span style="color:#0000FF; font-weight:bold;">ImagingReady</span> Model lookup
+           </a>
+    </div>
+
+     <div style="padding:10px 0;">
+        <span style="color:#0000FF;">4. </span> <a href="https://urldefense.com/v3/__https://www.promricheck.com/spring/main?execution=e2s1__;!!MznTZTSvDXGV0Co!Fht1vbCPQjVv6y_ry_AyczLa53aM1V8ZMLRUBf-h8ecqWx5P_cmENI9bhLBnBmfGnCccgdbeg2Y0tY-ZUFitXpkO0QNsfQ$" target="_blank" style="color:#0000FF;
+           text-decoration:underline;">
+           <span style="color:#0000FF; font-weight:bold;">Biotronik</span>
+        </a>
+	    
+    </div>
+
+<div style="text-align:right; margin-top:10px;">
+<button onclick="closeDeviceVendorsPopup()" style="background:#dc3545;color:white;padding:8px 18px;border:none;border-radius:6px;cursor:pointer;">Close</button>
+</div>
+</div>
+
+<div id="overlayDeviceVendors" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:1000;" onclick="closeDeviceVendorsPopup()">
+
+</div>
+
+<!-- ================= TOAST ================= -->
+<div id="toast">Copied ✅</div>
+<script>
+
+
+// ===== ORIGINAL COPY =====
+function copyText(id) {
+  const el = document.getElementById(id);
+  el.select();
+  document.execCommand("copy");
+  showToast("Copied ✅");
+}
+//=======================================ClearBuilder button ============================================
+function clearBuilder(){
+
+  // Reset global variables
+  transport = "";
+  selections = [];
+  npoIndex = -1;
+  dripIndex = -1;
+  aoIndex = -1;
+  o2Index = -1;
+  
+  // Clear textarea
+  document.getElementById("builderOutput").value = "";
+
+  // Clear NPO input
+  const npoInput = document.getElementById("npoTime");
+  if(npoInput){
+    npoInput.value = "";
+    npoInput.style.display = "none";
+  }
+
+  // Reset NPO button text
+  const npoBtn = document.getElementById("npoBtn");
+  if(npoBtn){
+    npoBtn.innerText = "🍽️ NPO: None";
+    npoBtn.classList.remove("active");
+  }
+
+  // Reset ALL buttons (remove green active state)
+  document.querySelectorAll(".builder .buttons button")
+    .forEach(b => b.classList.remove("active"));
+
+   // Reset drip button text
+  const dripBtn = document.getElementById("dripBtn");
+  if(dripBtn){
+    dripBtn.innerText = "💧 Drips 0/1/2/3/4";
+    dripBtn.classList.remove("active"); // also remove highlight
+  }
+  // Reset AxO button (cycle version)
+  const aoBtn = document.getElementById("aoBtn");
+  if(aoBtn){
+    aoBtn.innerText = "🧠 A&O x 4";
+    aoBtn.classList.remove("active");
+  }
+  // Reset O2 button
+  const o2Btn = document.getElementById("o2Btn");
+  if(o2Btn){
+    o2Btn.innerText = "🫁 O2/Airway";
+    o2Btn.classList.remove("active");
+  }
+
+  // Toast
+  showToast("Cleared ✅");
+}
+
+// ===== TEXT AREA ========= TEXT AREA ======= TEXT AREA ======= TEXT AREA ======= TEXT AREA ===
+let transport = "";
+let selections = [];
+
+function setTransport(btn,val){
+  transport = val;
+
+  document.querySelectorAll(".builder .buttons button")
+    .forEach(b=>{
+      if(["Wheelchair","Stretcher","Bed"].some(t=>b.innerText.includes(t))){
+        b.classList.remove("active");
+      }
+    });
+
+  btn.classList.add("active");
+  update();
+}
+
+function toggle(btn,val){
+  btn.classList.toggle("active");
+
+  if(selections.includes(val)){
+    selections = selections.filter(x=>x!==val);
+  } else {
+    selections.push(val);
+  }
+
+  update();
+}
+// ===== A&O cycle ========== A&O cycle ========= A&O cycle ========= A&O cycle ====
+let aoOptions = ["A&O x4", "A&O x3", "A&O x2", "A&O x1"];
+let aoIndex = -1;
+
+function cycleAO(btn){
+  // Remove old A&O selections
+  selections = selections.filter(s => !s.startsWith("A&O"));
+
+  // Next option
+  aoIndex++;
+  if(aoIndex >= aoOptions.length){
+    aoIndex = -1;
+    btn.classList.remove("active");
+    btn.innerText = "🧠 A&O: None";
+    update();
+    return;
+  }
+
+  const val = aoOptions[aoIndex];
+  selections.push(val);
+
+  btn.classList.add("active");
+  btn.innerText = "🧠 " + val;
+
+  update();
+}
+// ===== SIMPLE NPO cycle ========== SIMPLE NPO cycle ========== SIMPLE NPO cycle =====
+let npoOptions = [
+  "NPO after midnight",
+  "NPO > 4 hours",
+  "Patient had meals at ___ & NPO since"
+];
+
+let npoIndex = -1;
+
+function cycleNPO(btn){
+  // Remove old NPO selections
+  selections = selections.filter(s => !s.includes("NPO") && !s.includes("Patient had meals"));
+  //selections = selections.filter(s => !s.includes(s));
+
+  // Next option
+  npoIndex++;
+  if(npoIndex >= npoOptions.length){
+    npoIndex = -1;
+    btn.classList.remove("active");
+    btn.innerText = "🍽️ NPO: None";
+    update();
+    return;
+  }
+
+  const val = npoOptions[npoIndex];
+  selections.push(val);
+
+  btn.classList.add("active");
+  btn.innerText = "🍽️ " + val;
+
+  update();
+}
+// ===== O2 cycle ========== O2 cycle ========== O2 cycle =====
+
+let o2Options = ["Room Air", "2L O2", "3L O2", "4L O2", "5L O2", "*L O2"];
+let o2Index = -1;
+
+function cycleO2(btn){
+  // Remove old O2 selections
+  selections = selections.filter(s => !s.includes("O2") && !s.includes("Air"));
+
+  o2Index++;
+  if(o2Index >= o2Options.length){
+    o2Index = -1;
+    btn.classList.remove("active");
+    btn.innerText = "🫁 O2: None";
+    update();
+    return;
+  }
+
+  const val = o2Options[o2Index];
+  selections.push(val);
+
+  btn.classList.add("active");
+  btn.innerText = "🫁 " + val;
+
+  update();
+}
+//=============Drip Cycle button================================Drip Cycle button==========
+
+let dripOptions = ["no drips", "1 drip", "2 drips", "3 drips", "4 drips"];
+let dripIndex = -1;
+
+function cycleDrips(btn){
+  // Remove old drip selection
+  selections = selections.filter(s => !dripOptions.includes(s));
+
+  // Move to next option
+  dripIndex++;
+  if(dripIndex >= dripOptions.length){
+    dripIndex = -1;
+    btn.classList.remove("active");
+    btn.innerText = "💧 Drips: None";
+  } else {
+    const val = dripOptions[dripIndex];
+    selections.push(val);
+
+    btn.classList.add("active");
+    btn.innerText = "💧 Drips: " + val.replace(" drips","").replace(" drip","");
+  }
+
+  update();
+}
+//=============Function=============================Function================
+function update(){
+  let text = "";
+
+  const now = new Date();
+
+  // ===== Format MM/DD =====
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+
+  // ===== Format HH:MM (24-hour) =====
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+
+  const dateTime = `${month}/${day} ${hours}:${minutes}`;
+
+  let parts = [];
+
+  if(transport){
+    parts.push("Transport: " + transport.charAt(0).toUpperCase() + transport.slice(1));
+  }
+
+  if(selections.length){
+    parts = parts.concat(selections.map(s => {
+      if(s === "alert and oriented") return "A&O";
+      return s;
+    }));
+  }
+//==DateTime → parts (scanner + transport + selections)============================
+  if(parts.length){
+    text = `${dateTime} - ` + parts.join(" | ") + ".";
+  }
+
+  document.getElementById("builderOutput").value = text;
+}
+
+
+function copyBuilder(){
+  const el = document.getElementById("builderOutput");
+  el.select();
+  document.execCommand("copy");
+  showToast("Copied ✅");
+}
+//=============Contrast Allergy Popup ==================================
+
+function openContrastPopup(){
+  document.getElementById('contrastPopup').style.display = 'block';
+  document.getElementById('overlayContrast').style.display = 'block';
+}
+
+function closeContrastPopup(){
+  document.getElementById('contrastPopup').style.display = 'none';
+  document.getElementById('overlayContrast').style.display = 'none';
+}
+//============= CIEDPopup ==================================
+
+function openCIEDPopup(){
+  document.getElementById('CIEDPopup').style.display = 'block';
+  document.getElementById('overlayCIED').style.display = 'block';
+}
+
+function closeCIEDPopup(){
+  document.getElementById('CIEDPopup').style.display = 'none';
+  document.getElementById('overlayCIED').style.display = 'none';
+}
+//=============Dialysis Popup==================================
+
+function openDialysisPopup(){
+  document.getElementById('dialysisPopup').style.display = 'block';
+  document.getElementById('overlayDialysis').style.display = 'block';
+}
+
+function closeDialysisPopup(){
+  document.getElementById('dialysisPopup').style.display = 'none';
+  document.getElementById('overlayDialysis').style.display = 'none';
+}
+
+//============= PumpPopup ==================================
+
+function openPumpPopup(){
+  document.getElementById('PumpPopup').style.display = 'block';
+  document.getElementById('overlayPump').style.display = 'block';
+}
+
+function closePumpPopup(){
+  document.getElementById('PumpPopup').style.display = 'none';
+  document.getElementById('overlayPump').style.display = 'none';
+}
+
+// ===================================UsefulLinksPopup ===================================
+function openUsefulLinksPopup(){
+  document.getElementById('usefulLinksPopup').style.display = 'block';
+  document.getElementById('overlayUsefulLinks').style.display = 'block';
+}
+
+function closeUsefulLinksPopup(){
+  document.getElementById('usefulLinksPopup').style.display = 'none';
+  document.getElementById('overlayUsefulLinks').style.display = 'none';
+}
+//======================= DeviceVendorsPopup =============================
+function openDeviceVendorsPopup(){
+  document.getElementById('deviceVendorsPopup').style.display = 'block';
+  document.getElementById('overlayDeviceVendors').style.display = 'block';
+}
+
+function closeDeviceVendorsPopup(){
+  document.getElementById('deviceVendorsPopup').style.display = 'none';
+  document.getElementById('overlayDeviceVendors').style.display = 'none';
+}
+// ===================================ContactPopup ===================================
+
+function openContactPopup(){
+  document.getElementById('contactPopup').style.display = 'block';
+  document.getElementById('overlayContact').style.display = 'block';
+}
+
+function closeContactPopup(){
+  document.getElementById('contactPopup').style.display = 'none';
+  document.getElementById('overlayContact').style.display = 'none';
+}
+
+//=======================ContrastPopup allergy function=============================
+
+function insertContrast(type){
+  let text = "";
+
+  if(type === 'verify'){
+    text = `On the MRI screening questionnaires, the patient indicated a "yes" response regarding a reaction to MRI contrast. Therefore, please re-interview the patient to clarify patient's MRI contrast allergy. If the "yes" was selected in error, the screening question can be amended to "No" reaction to contrast, and the MRI procedure can proceed.`;
+  }
+
+  if(type === 'ctmr'){
+    text = `Please note that CT and MRI utilize different types of contrast agents. CT uses iodine-based contrast, while MRI uses gadolinium. An allergy to iodine contrast does not necessarily indicate an allergy to gadolinium, and vice versa`;
+  }
+
+  if(type === 'premedinpt'){
+    text = `Here are the premedication regimen if the patient is indeed allergic to MRI contrast.
+
+Option 1 (5 hour regimen):
+. Methylprednisolone sodium succinate (Solu-Medrol®) 40 mg IV at 5 hours and 1 hour prior to IV contrast.
+. Diphenhydramine (Benadryl®) 50 mg IV (slow IV push, rate <25 mg/min) 1 hour before IV contrast.
+
+Option 2 (5 hour regimen):
+. Dexamethasone sodium sulfate (Decadron®) 7.5 mg IV at 5 hours and 1 hour prior to IV contrast.
+. Diphenhydramine (Benadryl®) 50 mg IV (slow IV push, rate <25 mg/min) 1 hour before IV contrast.`;
+  }
+
+  if(type === 'opt1'){
+    text = `Option 1
+Scan time scheduled at 
+
+First dose: @ 
+
+. Solu-Medrol 40 mg IV
+
+Next doses will be @ 
+
+. Solu-Medrol 40 mg IV 
+. Benadryl 50 mg IV`;
+  }
+
+  if(type === 'opt2'){
+    text = `Option 2
+Scan time scheduled at 
+
+First dose: @ 
+
+. Decadron 7.5 mg IV
+
+Next doses will be @ 
+
+. Decadron 7.5 mg IV
+. Benadryl 50 mg IV`;
+  }
+if(type === 'premedoutpt'){
+    text = `Elective Premedication – Outpatient setting:
+
+Option 1 (13-hour regimen):
+. Prednisone 50 mg PO at 13, 7, and 1 hour prior to IV contrast.
+. Diphenhydramine (Benadryl®) 50 mg PO at 1 hour prior to IV contrast.
+
+Option 2 (12-hour regimen):
+. Methylprednisolone (Medrol®) 32 mg PO at 12 and 2 hours prior to IV contrast.
+. Diphenhydramine (Benadryl®) 50 mg PO at 1 hour prior to IV contrast.`;
+  }
+
+  // =======Contrast allergy Copy to clipboard
+  const temp = document.createElement("textarea");
+  temp.value = text;
+  document.body.appendChild(temp);
+  temp.select();
+  document.execCommand("copy");
+  document.body.removeChild(temp);
+
+  showToast("Copied ✅");
+  closeContrastPopup();
+}
+
+//======================= CIEDPopup =============================
+
+function insertCIED(type){
+  let text = "";
+
+  if(type === 'CIEDopt1'){
+    text = `This message concerns an upcoming MRI scan for this patient. Our records indicate the presence of a pacemaker/ICD. To ensure a safe and compliant MRI procedure, we require a copy of the patient's device implant ID card.
+For your convenience, you can send the ID card in either ways:
+. Scan and Upload: Please scan the ID card and upload it to Media Manager.
+. Clinical Photographs: Alternatively, you can take photos of the ID card and upload it to Media Manager.
+Should you have any questions or require further assistance, please do not hesitate to contact the CUH MRI department directly at 214-633-4478.
+Thank you!`;
+  }
+
+  if(type === 'CIEDopt2'){
+    text = `Thank you for uploading the card. As this patient has a cardiac device (Pacemaker/ICD), we'll need to obtain clearance from both Radiology and Electrophysiology before scheduling the MRI exam with a device rep as needed. Please note that these exams are typically scheduled Monday-Friday between 9a-2p.
+Please keep the patient and provider informed and reach out to us with any questions. Thank you!`;
+  }
+
+  if(type === 'CIEDopt3'){
+    text = `Our records indicate the presence of a neurostimulator. To ensure a safe and compliant MRI procedure, we require a copy of the patient's device implant ID card.
+For your convenience, you can send the ID card in either ways:
+. Scan and Upload: Please scan the ID card and upload it to Media Manager.
+. Clinical Photographs: Alternatively, you can take photos of the ID card and upload it to Media Manager.
+Should you have any questions or require further assistance, please do not hesitate to contact the CUH MRI department directly at 214-633-4478.
+
+IMPORTANT: Please ensure the patient has the remote controller with them. The remote must be fully charged and able to communicate with the stimulator. The patient or a family member must also be familiar with how to operate the remote independently.
+Thank you!`;
+  }
+
+  if(type === 'CIEDopt4'){
+    text = `Option 1`;
+  }
+
+  if(type === 'CIEDopt5'){
+    text = `Option 2`;
+  }
+if(type === 'CIEDopt6'){
+    text = `Elective Premedication`;
+  }
+// ===================================CIED Copy to clipboard ===================================
+  const temp = document.createElement("textarea");
+  temp.value = text;
+  document.body.appendChild(temp);
+  temp.select();
+  document.execCommand("copy");
+  document.body.removeChild(temp);
+
+  showToast("Copied ✅");
+  closeCIEDPopup();
+}
+
+
+//======================= DialysisPopup =============================
+
+function insertDialysis(type){
+  let text = "";
+
+  if(type === 'Dialysisopt1'){
+    text = `This patient has been scanned and received the contrast recently, per MRI contrast administration SOP, 24 hours wait time between contrast injections is required. Exam(s) will be scheduled after 24hours since the last MRI. The earliest appointment patient can get is [hh:mm]`;
+  }
+
+  if(type === 'Dialysisopt2'){
+    text = `Per MRI department SOP, high-risk patients should wait 96 hrs to receive additional doses of group II and Attending Radiologist approval is required. If the radiologist determines a contrast exam is required before 96 hours, the patient must agree to sign the “Consent for Administration of Gadolinium Contrast in Renal Dysfunction” form after discussion with a radiology provider. `;
+  }
+
+  if(type === 'Dialysisopt3'){
+    text = `Per the screening form/chart review, this patient is on - or may potentially be on - dialysis. Following an MRI exam with contrast, the patient will need to undergo dialysis as soon as possible, ideally within 24 hours.
+Could you please let us know whether this patient is currently on a dialysis schedule? If so, on which dates is the patient scheduled for dialysis?`;
+  }
+
+  if(type === 'Dialysisopt4'){
+    text = `This patient's MRI scan(s) under general anesthesia is tentatively scheduled for tomorrow.
+Due to the possibility of unforeseen urgent cases arising within our Anesthesia team, we kindly request you to confirm the appointment availability with MRI team at 214-633-4478 first thing in the morning.
+
+In the meantime, to have a smooth procedure, please ensure the following:
+
+•	The patient has a functional IV that is tested immediately before transport in the morning.
+•	The patient is consentable.
+•	The patient remains NPO after midnight.
+
+"In the event that the patient is not alert and oriented (AOx4) on the day of the MRI appointment, it is recommended to have a valid Medical Power of Attorney (MPOA) readily available. The MPOA designee can then provide informed consent on the patient's behalf"  `;
+  }
+
+  if(type === 'Dialysisopt5'){
+    text = `Anesthesia Requirements: 
+1. Provider to call AIC 2nd Floor ext. 38196 to get anesthesia approval based on availability. 
+2. What sedatives have been trialed? 
+3. Is IV Ativan an option before calling for anesthesia? 
+4. Patient must have functional IV. Needs to be tested prior to posting. 
+5. Is the patient capable of giving informed consent?
+6. NPO status? `;
+  }
+if(type === 'Dialysisopt6'){
+    text = `The first step to have this patient's MRI performed under general anesthesia is for the primary ordering provider to contact AIC Anesthesia at 38196 to discuss the case and obtain approval for anesthesia support.
+Dr. *, could you please reach out to AIC Anesthesia when you have a chance? Once a decision has been made, please let us know the approval status and provide the name of the anesthesia provider who approved the exam.
+Thank you. `;
+  }
+
+  
+ // ===================================Dialysis Copy to clipboard ===================================
+  const temp = document.createElement("textarea");
+  temp.value = text;
+  document.body.appendChild(temp);
+  temp.select();
+  document.execCommand("copy");
+  document.body.removeChild(temp);
+
+  showToast("Copied ✅");
+  closeDialysisPopup();
+}
+
+//======================= PumpPopup =============================
+
+function insertPump(type){
+  let text = "";
+
+  if(type === 'Pumpopt1'){
+    text = `This patient has a Medtronic SynchroMed pain pump. According to manufacturer guidelines, the pump will temporarily pause during the MRI and then resume automatically afterward. However, it requires a PMR (Physical Medicine & Rehabilitation) pump check as early as 1 hour after the MRI is completed.
+Could you please arrange and confirm that PMR will be available to perform this check before we schedule the MRI?
+Additionally, if the patient requires alternative pain management while the pump is paused, please place an order for the appropriate pain medication.
+Thank you!`;
+  }
+
+  if(type === 'Pumpopt2'){
+    text = `We are planning the patient's MRI, which will take approximately * hour. Because the standard PCA pump cannot enter the MRI scanner, we need to coordinate their pain management.
+
+Could you please check if the PCA pump can be safely paused for the duration of the scan? If it cannot be paused, we will need to coordinate with the provider to administer a pain bolus just prior to the MRI so the patient can tolerate the exam and remain still. Please let us know how you'd like to proceed!
+ Thank you!`;
+  }
+
+  if(type === 'Pumpopt3'){
+    text = `To ensure compliance with our UTSW safety protocol for the Intera 3000 Hepatic Artery Infusion (HAI) Pump, could you please confirm if this patient's pump is currently being managed by UTSW Surgical and Medical Oncology?
+
+If so, please verify whether the pump currently contains an active drug (Floxuridine) or inactive/approved solutions (heparinized saline, glycerin, and/or dexamethasone) so we can safely clear them for the MRI.
+Thank you!`;
+  }
+
+  if(type === 'Pumpopt4'){
+    text = `If the patient’s HAIP is managed by an outside provider (not UTSW Surgical/Medical Oncology), we will need written documentation from the ordering provider specifying the exact contents of the reservoir.
+
+Please note: If the current active drug is not on our approved list, it must be emptied and replaced with an inactive agent (such as heparinized saline or glycerin) before the MRI can be performed, with the exchange documented in the chart.
+Thank you!`;
+  }
+
+  if(type === 'Pumpopt5'){
+    text = `The MRI is currently on hold. The patient is using an Optiflow high-flow oxygen machine, which cannot go into the MRI room. We will schedule the MRI scan once they can breathe comfortably on O2 without the machine.`;
+  }
+if(type === 'Pumpopt6'){
+    text = `To ensure the patient is safe for MRI, could you please have the patient undergo a 30-minute trial of lying flat to determine whether they can tolerate the position with a nasal cannula before being transported to the MRI department?`;
+  }
+
+// ===================================Pump Copy to clipboard ===================================
+  const temp = document.createElement("textarea");
+  temp.value = text;
+  document.body.appendChild(temp);
+  temp.select();
+  document.execCommand("copy");
+  document.body.removeChild(temp);
+
+  showToast("Copied ✅");
+  closePumpPopup();
+}
+
+// ===== TOAST ========== TOAST ========== TOAST ========== TOAST ========== TOAST =====
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.innerText = msg;
+  t.className = "show";
+  setTimeout(()=>t.className="",1500);
+}
+</script>
+
+</body>
+<footer style="margin-top:40px; text-align:center; font-size:12px; color:#666;">
+  © 2026 Duc Truong. Designed and Developed by Duc Truong. All Rights Reserved.
+</footer>
+</html>
